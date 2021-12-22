@@ -1,0 +1,40 @@
+{
+  "name": "vite-plugin-sass-glob-import",
+  "version": "1.0.0",
+  "description": "Use glob syntax for imports in your main Sass or SCSS file.",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "npm run test && chokidar 'src/**/*.ts' 'tests/test.js' -c 'npm run build && npm run test'",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "test": "jest"
+  },
+  "author": {
+    "name": "Malven Co.",
+    "email": "chris@malven.co",
+    "url": "https://malven.co"
+  },
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "sass"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmalven/vite-plugin-glob-import"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^7.2.0",
+    "minimatch": "^3.0.4",
+    "vite": "^2.7.6"
+  },
+  "peerDependencies": {
+    "vite": "^2.7.6"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "jest": "^27.4.5",
+    "tsup": "^5.11.7",
+    "typescript": "^4.5.4"
+  }
+}
