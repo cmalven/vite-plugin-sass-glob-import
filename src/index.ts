@@ -8,7 +8,7 @@ const minimatch = require('minimatch');
 
 module.exports = function (options: typeof PluginOptions = {}): Plugin {
   // Regular expressions to match against
-  const FILE_REGEX = /\.s[c|a]ss$/;
+  const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@import\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
 
   // Path to the directory of the file being processed
