@@ -1,4 +1,4 @@
-const { PluginOptions } = require('./types')
+import { PluginOptions, TransformResult } from './types';
 import { Plugin } from "vite";
 
 const path = require('path');
@@ -6,7 +6,7 @@ const fs = require('fs');
 const glob = require('glob');
 const minimatch = require('minimatch');
 
-module.exports = function (options: typeof PluginOptions = {}): Plugin {
+export default function (options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@import\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
@@ -21,7 +21,7 @@ module.exports = function (options: typeof PluginOptions = {}): Plugin {
     return (!fs.statSync(filename).isDirectory() && path.extname(filename).match(/\.sass|\.scss/i));
   }
 
-  const transform = (src: string) => {
+  const transform = (src: string): string => {
     // Determine if this is Sass (vs SCSS) based on file extension
     const isSass = fileName.endsWith('.sass');
 
@@ -96,18 +96,20 @@ module.exports = function (options: typeof PluginOptions = {}): Plugin {
     name: 'sass-glob-import',
     enforce: 'pre',
 
-    transform(src: string, id: string) {
+    transform(src: string, id: string): TransformResult {
+      let result: TransformResult = {
+        code: src,
+        map: null, // provide source map if available
+      }
+
       if (FILE_REGEX.test(id)) {
         fileName = path.basename(id);
         filePath = path.dirname(id);
 
-        return {
-          code: transform(src),
-          map: null, // provide source map if available
-        };
+        result.code = transform(src);
       }
 
-      return src;
+      return result;
     },
   };
 }
