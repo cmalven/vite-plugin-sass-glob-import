@@ -43,7 +43,7 @@ function src_default(options = {}) {
         let imports = [];
         files.forEach((filename) => {
           if (isSassOrScss(filename)) {
-            filename = path.normalize(filename).replace(basePath, "");
+            filename = path.relative(basePath, filename).replace(/\\/g, "/");
             filename = filename.replace(/^\//, "");
             if (!ignorePaths.some((ignorePath) => {
               return minimatch(filename, ignorePath);

@@ -63,7 +63,7 @@ export default function (options: PluginOptions = {}): Plugin {
         files.forEach((filename: string) => {
           if (isSassOrScss(filename)) {
             // Remove parent base path
-            filename = path.normalize(filename).replace(basePath, '');
+            filename = path.relative(basePath, filename).replace(/\\/g, '/');
             // Remove leading slash
             filename = filename.replace(/^\//, '');
             if (!ignorePaths.some((ignorePath: string) => {
