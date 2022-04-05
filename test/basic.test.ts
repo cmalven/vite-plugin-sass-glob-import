@@ -1,7 +1,8 @@
 import { it, describe, expect } from 'vitest';
 import sassGlobImportPlugin from '../src';
 
-const original = `
+let source = `
+body {}
 @import "files/*.scss";
 `;
 
@@ -10,19 +11,35 @@ describe('it correctly converts glob patterns to inline imports', () => {
 
   it('for SCSS', () => {
     const expected = `
+body {}
 @import "files/_file-a.scss";
 @import "files/_file-b.scss";
 `;
     const path = __dirname + '/virtual-file.scss';
-    expect(plugin.transform(original, path)?.code).toEqual(expected);
+    expect(plugin.transform(source, path)?.code).toEqual(expected);
   });
 
   it('for Sass', () => {
     const expected = `
+body {}
 @import "files/_file-a.scss"
 @import "files/_file-b.scss"
 `;
     const path = __dirname + '/virtual-file.sass';
-    expect(plugin.transform(original, path)?.code).toEqual(expected);
+    expect(plugin.transform(source, path)?.code).toEqual(expected);
+  });
+
+  it('with @use', () => {
+    let source = `
+body {}
+@use "files/*.scss";
+`;
+    const expected = `
+body {}
+@use "files/_file-a.scss";
+@use "files/_file-b.scss";
+`;
+    const path = __dirname + '/virtual-file.scss';
+    expect(plugin.transform(source, path)?.code).toEqual(expected);
   });
 });

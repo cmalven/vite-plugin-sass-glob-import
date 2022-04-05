@@ -1,6 +1,6 @@
 # vite-plugin-sass-glob-import
 
-> Use glob syntax for imports in your main Sass or SCSS file.
+> Use glob syntax for @import or @use in your main Sass or SCSS file.
 
 ## Install
 
@@ -23,12 +23,12 @@ export default defineConfig({
 
 ## Usage
 
-**Note:** Glob imports only work in a top-level file, not within imported files.
+**Note:** Globbing only work in a top-level file, not within referenced files.
 
 ```scss
 // In src/styles/main.scss
 
-@import 'vars/**/*.scss';
+@use 'vars/**/*.scss';
 @import 'utils/**/*.scss';
 @import 'objects/**/*.scss';
 ```
@@ -36,8 +36,8 @@ export default defineConfig({
 The above will be transformed into something like the following before Vite processes it with Sass:
 
 ```scss
-@import 'vars/var-a.scss';
-@import 'vars/var-b.scss';
+@use 'vars/var-a.scss';
+@use 'vars/var-b.scss';
 @import 'utils/utils-a.scss';
 @import 'utils/utils-b.scss';
 @import 'objects/objects-a.scss';

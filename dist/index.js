@@ -32,7 +32,7 @@ var glob = require("glob");
 var minimatch = require("minimatch");
 function src_default(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
-  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@import\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
+  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
   let filePath = "";
   let fileName = "";
   function isSassOrScss(filename) {
@@ -45,9 +45,9 @@ function src_default(options = {}) {
     let contentLinesCount = src.split("\n").length;
     let result;
     for (let i = 0; i < contentLinesCount; i++) {
-      result = IMPORT_REGEX.exec(src);
-      if (result !== null) {
-        const [importRule, startComment, globPattern, endComment] = result;
+      result = [...src.matchAll(IMPORT_REGEX)];
+      if (result.length) {
+        const [importRule, startComment, importType, globPattern, endComment] = result[0];
         let files = [];
         let basePath = "";
         for (let i2 = 0; i2 < searchBases.length; i2++) {
@@ -67,7 +67,7 @@ function src_default(options = {}) {
             if (!ignorePaths.some((ignorePath) => {
               return minimatch(filename, ignorePath);
             })) {
-              imports.push('@import "' + filename + '"' + (isSass ? "" : ";"));
+              imports.push(`@${importType} "` + filename + '"' + (isSass ? "" : ";"));
             }
           }
         });

@@ -9,7 +9,7 @@ const minimatch = require('minimatch');
 export default function (options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
-  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@import\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
+  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
 
   // Path to the directory of the file being processed
   let filePath = '';
@@ -39,10 +39,10 @@ export default function (options: PluginOptions = {}): Plugin {
     // Loop through each line
     for (let i = 0; i < contentLinesCount; i++) {
       // Find any glob import patterns on the line
-      result = IMPORT_REGEX.exec(src);
+      result = [...src.matchAll(IMPORT_REGEX)];
 
-      if (result !== null) {
-        const [importRule, startComment, globPattern, endComment] = result;
+      if (result.length) {
+        const [importRule, startComment, importType, globPattern, endComment] = result[0];
 
         let files = [];
         let basePath = '';
@@ -70,7 +70,7 @@ export default function (options: PluginOptions = {}): Plugin {
               return minimatch(filename, ignorePath);
             })) {
               // remove parent base path
-              imports.push('@import "' + filename + '"' + (isSass ? '' : ';'));
+              imports.push(`@${importType} "` + filename + '"' + (isSass ? '' : ';'));
             }
           }
         });
