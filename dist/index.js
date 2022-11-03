@@ -24,13 +24,13 @@ var __toCommonJS = /* @__PURE__ */ ((cache) => {
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  default: () => src_default
+  default: () => sassGlobImports
 });
 var path = require("path");
 var fs = require("fs");
 var glob = require("glob");
 var minimatch = require("minimatch");
-function src_default(options = {}) {
+function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
   let filePath = "";

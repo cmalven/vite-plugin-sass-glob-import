@@ -4,6 +4,6 @@ interface PluginOptions {
     ignorePaths?: string[];
 }
 
-declare function export_default(options?: PluginOptions): Plugin;
+declare function sassGlobImports(options?: PluginOptions): Plugin;
 
-export { export_default as default };
+export { sassGlobImports as default };

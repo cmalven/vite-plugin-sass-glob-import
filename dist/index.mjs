@@ -11,7 +11,7 @@ var path = __require("path");
 var fs = __require("fs");
 var glob = __require("glob");
 var minimatch = __require("minimatch");
-function src_default(options = {}) {
+function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
   let filePath = "";
@@ -82,5 +82,5 @@ function src_default(options = {}) {
   };
 }
 export {
-  src_default as default
+  sassGlobImports as default
 };

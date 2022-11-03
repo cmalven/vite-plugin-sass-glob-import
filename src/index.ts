@@ -6,7 +6,7 @@ const fs = require('fs');
 const glob = require('glob');
 const minimatch = require('minimatch');
 
-export default function (options: PluginOptions = {}): Plugin {
+export default function sassGlobImports(options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
