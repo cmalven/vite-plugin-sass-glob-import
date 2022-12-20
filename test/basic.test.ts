@@ -44,7 +44,7 @@ body {}
   });
 });
 
-describe('it errors with invalid glob paths', () => {
+describe('it warns for invalid glob paths', () => {
   const plugin: any = sassGlobImportPlugin();
 
   it('for SCSS', () => {
@@ -57,8 +57,8 @@ body {}
 
 `;
     const path = __dirname + '/virtual-file.scss';
-    spyOn(console, 'error');
+    spyOn(console, 'warn');
     expect(plugin.transform(source, path)?.code).toEqual(expected);
-    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 });

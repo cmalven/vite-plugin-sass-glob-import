@@ -11,6 +11,7 @@ var path = __require("path");
 var fs = __require("fs");
 var glob = __require("glob");
 var minimatch = __require("minimatch");
+var c = __require("ansi-colors");
 function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
@@ -40,7 +41,7 @@ function sassGlobImports(options = {}) {
           if (globPatternWithoutWildcard.length) {
             const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
             if (!directoryExists) {
-              console.error(`Valid directories weren't found for the glob pattern "${globPattern}"`);
+              console.warn(c.yellow(`Sass Glob Import: Directories don't exist for the glob pattern "${globPattern}"`));
             }
           }
           if (files.length > 0) {

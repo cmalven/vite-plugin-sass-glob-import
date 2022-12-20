@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 const minimatch = require('minimatch');
+const c = require('ansi-colors');
 
 export default function sassGlobImports(options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
@@ -58,7 +59,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
           if (globPatternWithoutWildcard.length) {
             const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
             if (!directoryExists) {
-              console.error(`Valid directories weren't found for the glob pattern "${globPattern}"`);
+              console.warn(c.yellow(`Sass Glob Import: Directories don't exist for the glob pattern "${globPattern}"`));
             }
           }
 
