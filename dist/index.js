@@ -55,6 +55,13 @@ function sassGlobImports(options = {}) {
           files = glob.sync(path.join(basePath, globPattern), {
             cwd: "./"
           });
+          const globPatternWithoutWildcard = globPattern.split("*")[0];
+          if (globPatternWithoutWildcard.length) {
+            const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
+            if (!directoryExists) {
+              console.error(`Valid directories weren't found for the glob pattern "${globPattern}"`);
+            }
+          }
           if (files.length > 0) {
             break;
           }

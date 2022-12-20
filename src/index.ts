@@ -53,6 +53,15 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
             cwd: './',
           });
 
+          // Do directories exist matching the glob pattern?
+          const globPatternWithoutWildcard = globPattern.split('*')[0];
+          if (globPatternWithoutWildcard.length) {
+            const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
+            if (!directoryExists) {
+              console.error(`Valid directories weren't found for the glob pattern "${globPattern}"`);
+            }
+          }
+
           if (files.length > 0) {
             break;
           }

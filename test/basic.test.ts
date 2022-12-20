@@ -1,4 +1,4 @@
-import { it, describe, expect } from 'vitest';
+import { it, describe, expect, spyOn } from 'vitest';
 import sassGlobImportPlugin from '../src';
 
 let source = `
@@ -41,5 +41,24 @@ body {}
 `;
     const path = __dirname + '/virtual-file.scss';
     expect(plugin.transform(source, path)?.code).toEqual(expected);
+  });
+});
+
+describe('it errors with invalid glob paths', () => {
+  const plugin: any = sassGlobImportPlugin();
+
+  it('for SCSS', () => {
+    let source = `
+body {}
+@use "foo/**/*.scss";
+`;
+    const expected = `
+body {}
+
+`;
+    const path = __dirname + '/virtual-file.scss';
+    spyOn(console, 'error');
+    expect(plugin.transform(source, path)?.code).toEqual(expected);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 });
