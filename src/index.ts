@@ -1,11 +1,11 @@
 import { PluginOptions, TransformResult } from './types';
 import { Plugin } from "vite";
 
-const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
-const minimatch = require('minimatch');
-const c = require('ansi-colors');
+import path from 'path';
+import fs from 'fs';
+import glob from 'glob';
+import minimatch   from "minimatch";
+import c from 'ansi-colors';
 
 export default function sassGlobImports(options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
@@ -45,7 +45,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
       if (result.length) {
         const [importRule, startComment, importType, globPattern, endComment] = result[0];
 
-        let files = [];
+        let files: string[] = [];
         let basePath = '';
         for (let i = 0; i < searchBases.length; i++) {
           basePath = searchBases[i];

@@ -1,17 +1,9 @@
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined")
-    return require.apply(this, arguments);
-  throw new Error('Dynamic require of "' + x + '" is not supported');
-});
-
 // src/index.ts
-var path = __require("path");
-var fs = __require("fs");
-var glob = __require("glob");
-var minimatch = __require("minimatch");
-var c = __require("ansi-colors");
+import path from "path";
+import fs from "fs";
+import glob from "glob";
+import minimatch from "minimatch";
+import c from "ansi-colors";
 function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;

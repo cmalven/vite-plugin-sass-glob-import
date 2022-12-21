@@ -1,6 +1,8 @@
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __export = (target, all) => {
@@ -15,6 +17,9 @@ var __reExport = (target, module2, copyDefault, desc) => {
   }
   return target;
 };
+var __toESM = (module2, isNodeMode) => {
+  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", !isNodeMode && module2 && module2.__esModule ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
+};
 var __toCommonJS = /* @__PURE__ */ ((cache) => {
   return (module2, temp) => {
     return cache && cache.get(module2) || (temp = __reExport(__markAsModule({}), module2, 1), cache && cache.set(module2, temp), temp);
@@ -26,18 +31,18 @@ var src_exports = {};
 __export(src_exports, {
   default: () => sassGlobImports
 });
-var path = require("path");
-var fs = require("fs");
-var glob = require("glob");
-var minimatch = require("minimatch");
-var c = require("ansi-colors");
+var import_path = __toESM(require("path"));
+var import_fs = __toESM(require("fs"));
+var import_glob = __toESM(require("glob"));
+var import_minimatch = __toESM(require("minimatch"));
+var import_ansi_colors = __toESM(require("ansi-colors"));
 function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
   const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
   let filePath = "";
   let fileName = "";
   function isSassOrScss(filename) {
-    return !fs.statSync(filename).isDirectory() && path.extname(filename).match(/\.sass|\.scss/i);
+    return !import_fs.default.statSync(filename).isDirectory() && import_path.default.extname(filename).match(/\.sass|\.scss/i);
   }
   const transform = (src) => {
     const isSass = fileName.endsWith(".sass");
@@ -53,14 +58,14 @@ function sassGlobImports(options = {}) {
         let basePath = "";
         for (let i2 = 0; i2 < searchBases.length; i2++) {
           basePath = searchBases[i2];
-          files = glob.sync(path.join(basePath, globPattern), {
+          files = import_glob.default.sync(import_path.default.join(basePath, globPattern), {
             cwd: "./"
           });
           const globPatternWithoutWildcard = globPattern.split("*")[0];
           if (globPatternWithoutWildcard.length) {
-            const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
+            const directoryExists = import_fs.default.existsSync(import_path.default.join(basePath, globPatternWithoutWildcard));
             if (!directoryExists) {
-              console.warn(c.yellow(`Sass Glob Import: Directories don't exist for the glob pattern "${globPattern}"`));
+              console.warn(import_ansi_colors.default.yellow(`Sass Glob Import: Directories don't exist for the glob pattern "${globPattern}"`));
             }
           }
           if (files.length > 0) {
@@ -70,10 +75,10 @@ function sassGlobImports(options = {}) {
         let imports = [];
         files.forEach((filename) => {
           if (isSassOrScss(filename)) {
-            filename = path.relative(basePath, filename).replace(/\\/g, "/");
+            filename = import_path.default.relative(basePath, filename).replace(/\\/g, "/");
             filename = filename.replace(/^\//, "");
             if (!ignorePaths.some((ignorePath) => {
-              return minimatch(filename, ignorePath);
+              return (0, import_minimatch.default)(filename, ignorePath);
             })) {
               imports.push(`@${importType} "` + filename + '"' + (isSass ? "" : ";"));
             }
@@ -100,8 +105,8 @@ function sassGlobImports(options = {}) {
         map: null
       };
       if (FILE_REGEX.test(id)) {
-        fileName = path.basename(id);
-        filePath = path.dirname(id);
+        fileName = import_path.default.basename(id);
+        filePath = import_path.default.dirname(id);
         result.code = transform(src);
       }
       return result;
