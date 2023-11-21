@@ -1,4 +1,4 @@
-import { it, describe, expect, spyOn } from 'vitest';
+import { it, describe, expect, vi } from 'vitest';
 import sassGlobImportPlugin from '../src';
 
 let source = `
@@ -57,7 +57,7 @@ body {}
 
 `;
     const path = __dirname + '/virtual-file.scss';
-    spyOn(console, 'warn');
+    vi.spyOn(console, 'warn');
     expect(plugin.transform(source, path)?.code).toEqual(expected);
     expect(console.warn).toHaveBeenCalledTimes(1);
   });
