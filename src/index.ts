@@ -3,8 +3,8 @@ import { Plugin } from "vite";
 
 import path from 'path';
 import fs from 'fs';
-import { globSync } from 'glob';
-import { minimatch }   from "minimatch";
+import glob from 'glob';
+import minimatch   from "minimatch";
 import c from 'ansi-colors';
 
 export default function sassGlobImports(options: PluginOptions = {}): Plugin {
@@ -50,12 +50,9 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
         for (let i = 0; i < searchBases.length; i++) {
           basePath = searchBases[i];
 
-          files = globSync(path.join(basePath, globPattern), {
+          files = glob.sync(path.join(basePath, globPattern), {
             cwd: './',
           });
-
-          // Sort files alphabetically
-          files.sort();
 
           // Do directories exist matching the glob pattern?
           const globPatternWithoutWildcard = globPattern.split('*')[0];

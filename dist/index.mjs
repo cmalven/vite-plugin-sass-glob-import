@@ -1,8 +1,8 @@
 // src/index.ts
 import path from "path";
 import fs from "fs";
-import { globSync } from "glob";
-import { minimatch } from "minimatch";
+import glob from "glob";
+import minimatch from "minimatch";
 import c from "ansi-colors";
 function sassGlobImports(options = {}) {
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
@@ -26,10 +26,9 @@ function sassGlobImports(options = {}) {
         let basePath = "";
         for (let i2 = 0; i2 < searchBases.length; i2++) {
           basePath = searchBases[i2];
-          files = globSync(path.join(basePath, globPattern), {
+          files = glob.sync(path.join(basePath, globPattern), {
             cwd: "./"
           });
-          files.sort();
           const globPatternWithoutWildcard = globPattern.split("*")[0];
           if (globPatternWithoutWildcard.length) {
             const directoryExists = fs.existsSync(path.join(basePath, globPatternWithoutWildcard));
@@ -72,7 +71,6 @@ function sassGlobImports(options = {}) {
       let result = {
         code: src,
         map: null
-        // provide source map if available
       };
       if (FILE_REGEX.test(id)) {
         fileName = path.basename(id);
