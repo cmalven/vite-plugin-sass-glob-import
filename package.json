@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/cmalven/vite-plugin-sass-glob-import"
+    "url": "git+https://github.com/cmalven/vite-plugin-sass-glob-import.git"
   },
   "license": "MIT",
   "dependencies": {
