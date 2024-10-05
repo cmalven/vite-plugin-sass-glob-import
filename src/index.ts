@@ -24,7 +24,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
 
   const transform = (src: string): string => {
     // Determine if this is Sass (vs SCSS) based on file extension
-    const isSass = fileName.endsWith('.sass');
+    const isSass = path.extname(fileName).match(/\.sass/i);
 
     // Store base locations
     const searchBases = [filePath];
