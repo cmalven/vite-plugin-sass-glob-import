@@ -70,7 +70,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
 
         let imports = [];
 
-        files.forEach((filename: string) => {
+        files.forEach((filename: string, index: number) => {
           if (isSassOrScss(filename)) {
             // Remove parent base path
             filename = path.relative(basePath, filename).replace(/\\/g, '/');
@@ -79,8 +79,24 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
             if (!ignorePaths.some((ignorePath: string) => {
               return minimatch(filename, ignorePath);
             })) {
+              let namespaceExport = ''
+              // Add namespace to @use import
+              if(importType === 'use' && options.namespace) {
+                let namespace = ''
+                if(typeof options.namespace === 'function'){
+                  const computedNamespace = options.namespace(filename, index);
+                  namespace = typeof computedNamespace === 'string' ? computedNamespace : '';
+                } else if(typeof options.namespace === 'string') {
+                  namespace = options.namespace;
+                }
+
+                // Namespace function can return an empty string
+                if(namespace.length){
+                  namespaceExport = ` as ${namespace}`;
+                }
+              }
               // remove parent base path
-              imports.push(`@${importType} "` + filename + '"' + (isSass ? '' : ';'));
+              imports.push(`@${importType} "` + filename + '"' + namespaceExport + (isSass ? '' : ';'));
             }
           }
         });
