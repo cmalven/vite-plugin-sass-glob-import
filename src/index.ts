@@ -1,16 +1,17 @@
-import { PluginOptions, TransformResult } from './types';
-import { Plugin } from "vite";
-
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
+import c from 'ansi-colors';
 import { globSync } from 'glob';
 import { minimatch } from "minimatch";
-import c from 'ansi-colors';
+import { Plugin } from "vite";
+
+import { PluginOptions, TransformResult } from './types';
 
 export default function sassGlobImports(options: PluginOptions = {}): Plugin {
   // Regular expressions to match against
   const FILE_REGEX = /\.s[c|a]ss(\?direct)?$/;
-  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*)?)@(import|use)\s+["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["'];?([ \t]*(?:\/[/*].*)?)$/gm;
+  const IMPORT_REGEX = /^([ \t]*(?:\/\*.*\*\/)?)@(import|use|include)\s+(meta\.load-css\()?["']([^"']+\*[^"']*(?:\.scss|\.sass)?)["']\)?;?([ \t]*(?:\/[/*].*)?)$/gm;
 
   // Path to the directory of the file being processed
   let filePath = '';
@@ -43,7 +44,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
       result = [...src.matchAll(IMPORT_REGEX)];
 
       if (result.length) {
-        const [importRule, startComment, importType, globPattern, endComment] = result[0];
+        const [importRule, startComment, importType, metaLoadException, globPattern, endComment] = result[0];
 
         let files: string[] = [];
         let basePath = '';
@@ -70,7 +71,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
 
         let imports = [];
 
-        files.forEach((filename: string) => {
+        files.forEach((filename: string, index: number) => {
           if (isSassOrScss(filename)) {
             // Remove parent base path
             filename = path.relative(basePath, filename).replace(/\\/g, '/');
@@ -79,8 +80,30 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
             if (!ignorePaths.some((ignorePath: string) => {
               return minimatch(filename, ignorePath);
             })) {
-              // remove parent base path
-              imports.push(`@${importType} "` + filename + '"' + (isSass ? '' : ';'));
+              if (importType === 'use' && options.namespace) {
+                // Add namespace to @use import
+                let namespaceExport = ''
+                let namespace = ''
+                if (typeof options.namespace === 'function') {
+                  const computedNamespace = options.namespace(filename, index)
+                  namespace = typeof computedNamespace === 'string' ? computedNamespace : ''
+                } else if (typeof options.namespace === 'string') {
+                  namespace = options.namespace
+                }
+
+                // Namespace function can return an empty string
+                if (namespace.length) {
+                  namespaceExport = ` as ${namespace}`
+                }
+
+                imports.push(`@${importType} "${filename}" ${namespaceExport}${isSass ? '' : ';'}`)
+              } else if (importType === 'include' && metaLoadException) {
+                // Add meta.load-css rule import
+                imports.push(`@${importType} meta.load-css("${filename}")${isSass ? '' : ';'}`)
+              } else {
+                // remove parent base path
+                imports.push(`@${importType} "${filename}" ${isSass ? '' : ';'}`)
+              }
             }
           }
         });
