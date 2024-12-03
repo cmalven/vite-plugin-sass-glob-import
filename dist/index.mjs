@@ -41,14 +41,27 @@ function sassGlobImports(options = {}) {
           }
         }
         let imports = [];
-        files.forEach((filename) => {
+        files.forEach((filename, index) => {
           if (isSassOrScss(filename)) {
             filename = path.relative(basePath, filename).replace(/\\/g, "/");
             filename = filename.replace(/^\//, "");
             if (!ignorePaths.some((ignorePath) => {
               return minimatch(filename, ignorePath);
             })) {
-              imports.push(`@${importType} "` + filename + '"' + (isSass ? "" : ";"));
+              let namespaceExport = "";
+              if (importType === "use" && options.namespace) {
+                let namespace = "";
+                if (typeof options.namespace === "function") {
+                  const computedNamespace = options.namespace(filename, index);
+                  namespace = typeof computedNamespace === "string" ? computedNamespace : "";
+                } else if (typeof options.namespace === "string") {
+                  namespace = options.namespace;
+                }
+                if (namespace.length) {
+                  namespaceExport = ` as ${namespace}`;
+                }
+              }
+              imports.push(`@${importType} "` + filename + '"' + namespaceExport + (isSass ? "" : ";"));
             }
           }
         });

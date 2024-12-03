@@ -45,3 +45,44 @@ The above will be transformed into something like the following before Vite proc
 @import 'objects/objects-c.scss';
 ```
 
+## Options
+
+### Namespace
+
+Dart Sass use the last components of the `@use` URL when it comes to set a default namespace. Using globs might end up with namespace collision if multiple files have the same name in different folders.
+
+A simple trick is to set the `namespace` option to `"*"` to make all `@use` global.
+
+```js
+// In vite.config.js
+
+import { defineConfig } from 'vite'
+import sassGlobImports from 'vite-plugin-sass-glob-import';
+
+export default defineConfig({
+  plugins: [
+    sassGlobImports({
+      namespace: '*'
+    })
+  ]
+});
+```
+
+This can also end up with some variables collision. Another possibility is to set the `namespace` option to a function that receive the current `@use` URL and its index in the glob
+
+```js
+// In vite.config.js
+
+import { defineConfig } from 'vite'
+import sassGlobImports from 'vite-plugin-sass-glob-import';
+
+export default defineConfig({
+  plugins: [
+    sassGlobImports({
+      namespace(filepath, index){
+        return filepath.replace('.scss').split('/').at(-3);
+      }
+    })
+  ]
+});
+```
