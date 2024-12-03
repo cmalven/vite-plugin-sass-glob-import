@@ -52,6 +52,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
 
           files = globSync(path.join(basePath, globPattern), {
             cwd: './',
+            windowsPathsNoEscape: true,
           }).sort((a, b) => a.localeCompare(b, 'en'));
 
           // Do directories exist matching the glob pattern?

@@ -13,7 +13,7 @@ function sassGlobImports(options = {}) {
     return !fs.statSync(filename).isDirectory() && path.extname(filename).match(/\.sass|\.scss/i);
   }
   const transform = (src) => {
-    const isSass = fileName.endsWith(".sass");
+    const isSass = path.extname(fileName).match(/\.sass/i);
     const searchBases = [filePath];
     const ignorePaths = options.ignorePaths || [];
     let contentLinesCount = src.split("\n").length;
@@ -27,7 +27,8 @@ function sassGlobImports(options = {}) {
         for (let i2 = 0; i2 < searchBases.length; i2++) {
           basePath = searchBases[i2];
           files = globSync(path.join(basePath, globPattern), {
-            cwd: "./"
+            cwd: "./",
+            windowsPathsNoEscape: true
           }).sort((a, b) => a.localeCompare(b, "en"));
           const globPatternWithoutWildcard = globPattern.split("*")[0];
           if (globPatternWithoutWildcard.length) {
