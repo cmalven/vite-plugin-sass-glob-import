@@ -45,3 +45,6 @@ The above will be transformed into something like the following before Vite proc
 @import 'objects/objects-c.scss';
 ```
 
+## Caveats
+
+This plugin is intentionally simple and doesn't attempt to support every feature offered by Vite. If your use-case isn't similar to the examples in the README above, it probably isn't supported by this plugin.
