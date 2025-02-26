@@ -71,7 +71,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
 
         let imports = [];
 
-        files.forEach((filename: string) => {
+        files.forEach((filename: string, index: number) => {
           if (isSassOrScss(filename)) {
             // Remove parent base path
             filename = path.relative(basePath, filename).replace(/\\/g, '/');
@@ -81,7 +81,7 @@ export default function sassGlobImports(options: PluginOptions = {}): Plugin {
               return minimatch(filename, ignorePath);
             })) {
               // remove parent base path
-              imports.push(`@${importType} "` + filename + '"' + (isSass ? '' : ';'));
+              imports.push(`@${importType} "` + filename + '" as '+  path.parse(filename).name + index + (isSass ? '' : ';'));
             }
           }
         });
