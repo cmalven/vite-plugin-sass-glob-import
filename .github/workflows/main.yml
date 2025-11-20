@@ -1,19 +1,32 @@
-name: Publish
+name: Test and Publish
 
 on:
   release:
     types: [published]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@master
       with:
-        node-version: '10.x'
+        node-version: '20'
         registry-url: 'https://registry.npmjs.org'
+    - name: Update npm
+      run: npm install -g npm@latest
+    - name: Install, Build, and Test
+      run: |
+        npm ci
+        npm test
     - name: Publish to npm
       run: |
         npm publish --access public
