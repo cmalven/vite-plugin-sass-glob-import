@@ -1,12 +1,12 @@
 {
   "name": "vite-plugin-sass-glob-import",
-  "version": "6.0.3",
+  "version": "7.0.0",
   "description": "Use glob syntax for imports in your main Sass or SCSS file.",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "scripts": {
     "dev": "vitest",
-    "build": "tsup src/index.ts --format esm --dts",
+    "build": "tsdown src/index.ts --format esm --dts",
     "test": "vitest run"
   },
   "author": {
@@ -30,14 +30,14 @@
     "minimatch": "10.2.4"
   },
   "peerDependencies": {
-    "vite": "^6.0.0 || ^7.0.0"
+    "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "devDependencies": {
     "@types/glob": "9.0.0",
     "@types/node": "24.10.1",
-    "tsup": "8.5.1",
+    "tsdown": "0.21.4",
     "typescript": "5.9.3",
-    "vite": "7.3.1",
-    "vitest": "4.0.18"
+    "vite": "8.0.1",
+    "vitest": "4.1.0"
   }
 }
