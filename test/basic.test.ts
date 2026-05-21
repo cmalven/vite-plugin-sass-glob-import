@@ -42,6 +42,20 @@ body {}
     const path = __dirname + '/virtual-file.scss';
     expect(plugin.transform(source, path)?.code).toEqual(expected);
   });
+
+  it('with @use and a modifier (as *)', () => {
+    let source = `
+body {}
+@use "files/*.scss" as *;
+`;
+    const expected = `
+body {}
+@use "files/_file-a.scss" as *;
+@use "files/_file-b.scss" as *;
+`;
+    const path = __dirname + '/virtual-file.scss';
+    expect(plugin.transform(source, path)?.code).toEqual(expected);
+  });
 });
 
 describe('it warns for invalid glob paths', () => {
